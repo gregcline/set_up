@@ -10,10 +10,17 @@ Plug 'itchyny/lightline.vim'
 Plug 'leafgarland/typescript-vim', { 'for': ['typescript'] }
 Plug 'sheerun/vim-polyglot'
 Plug 'Chiel92/vim-autoformat'
+Plug 'vim-syntastic/syntastic'
 Plug 'ctrlpvim/ctrlp.vim'
 Plug 'ludovicchabant/vim-gutentags'
-call plug#end()
+Plug 'kaicataldo/material.vim'
 
+" Language plugins
+Plug 'vim-ruby/vim-ruby'
+Plug 'slashmili/alchemist.vim'
+Plug 'rust-lang/rust.vim'
+Plug 'racer-rust/vim-racer'
+call plug#end()
 
 "---------------------------------Key bindings---------------------
 " bind leader
@@ -27,22 +34,33 @@ nnoremap th :tabprev<cr>
 nnoremap tl :tabnext<cr>
 nnoremap tn :tabnew
 
+" Quicker window movement
+nnoremap <C-j> <C-w>j
+nnoremap <C-k> <C-w>k
+nnoremap <C-h> <C-w>h
+nnoremap <C-l> <C-w>l
 " bind for explore
 noremap <leader>e :Lexplore<cr>
+" Back to normal in terminal
+noremap <C-n> <C-w><S-n>
 
 "--------------------------------other vim settings------------------------
 " setting tabsize for html
 autocmd Filetype html setlocal ts=2 sw=2 expandtab
 set backspace=indent,eol,start
 set background=dark
-colorscheme solarized
+colorscheme material
 " set relativenumber
 set number
 set tabstop=4
 set expandtab
 set shiftwidth=4
 set autoindent
+set splitbelow
+set splitright
 syntax enable
+" Display extra whitespace
+set list listchars=tab:»·,trail:·,nbsp:·
 "-------------------------auto commands------------------------------
 augroup TrimTrailingWhitespace
     autocmd!
@@ -59,6 +77,12 @@ if !has('gui_running')
     set t_Co=256
 endif
 set noshowmode
+let g:lightline = { 'colorscheme': 'material_vim' }
+
+" Color
+if (has("termguicolors"))
+    set termguicolors
+endif
 
 " mu-complete
 set completeopt-=preview
