@@ -1,25 +1,30 @@
 set nocompatible
 "--------------------------------plugin managment----------------------
 call plug#begin()
+" disable certain polyglots
+let g:polyglot_disabled = ['elm', 'elixir', 'ruby', 'rust', 'python']
+" Language plugins
+Plug 'vim-ruby/vim-ruby'
+Plug 'slashmili/alchemist.vim'
+Plug 'rust-lang/rust.vim'
+Plug 'racer-rust/vim-racer'
+Plug 'elmcast/elm-vim'
+Plug 'leafgarland/typescript-vim', { 'for': ['typescript'] }
+
+Plug 'w0rp/ale'
 Plug 'tpope/vim-surround'
 Plug 'lifepillar/vim-mucomplete'
 Plug 'altercation/vim-colors-solarized'
 Plug 'jiangmiao/auto-pairs'
 Plug 'ctrlpvim/ctrlp.vim'
 Plug 'itchyny/lightline.vim'
-Plug 'leafgarland/typescript-vim', { 'for': ['typescript'] }
 Plug 'sheerun/vim-polyglot'
 Plug 'Chiel92/vim-autoformat'
-Plug 'vim-syntastic/syntastic'
+" Plug 'vim-syntastic/syntastic'
 Plug 'ctrlpvim/ctrlp.vim'
 Plug 'ludovicchabant/vim-gutentags'
 Plug 'kaicataldo/material.vim'
-
-" Language plugins
-Plug 'vim-ruby/vim-ruby'
-Plug 'slashmili/alchemist.vim'
-Plug 'rust-lang/rust.vim'
-Plug 'racer-rust/vim-racer'
+Plug 'janko-m/vim-test'
 call plug#end()
 
 "---------------------------------Key bindings---------------------
@@ -39,10 +44,13 @@ nnoremap <C-j> <C-w>j
 nnoremap <C-k> <C-w>k
 nnoremap <C-h> <C-w>h
 nnoremap <C-l> <C-w>l
-" bind for explore
-noremap <leader>e :Lexplore<cr>
 " Back to normal in terminal
-noremap <C-n> <C-w><S-n>
+tnoremap <C-n> <C-w><S-n>
+
+" Quick testing
+nnoremap t<C-f> :TestFile<CR>
+nnoremap t<C-n> :TestNearest<CR>
+nnoremap t<C-v> :TestVisit<CR>
 
 "--------------------------------other vim settings------------------------
 " setting tabsize for html
@@ -91,6 +99,12 @@ set completeopt+=longest,menuone,noselect
 " ctrlp greptool
 set grepprg=rg
 
+" ALE
+let g:ale_linters = {'python': ['autopep8']}
+let g:ale_python_autopep8_use_global = 1
+
+" TestRun
+let test#strategy = "vimterminal"
 
 " ## added by OPAM user-setup for vim / base ## 93ee63e278bdfc07d1139a748ed3fff2 ## you can edit, but keep this line
 let s:opam_share_dir = system("opam config var share")
