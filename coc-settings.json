@@ -1,0 +1,5 @@
+{
+    "java.jdt.ls.vmargs": "-javaagent:/Users/gcline5/.gradle/caches/modules-2/files-2.1/org.projectlombok/lombok/1.18.10/625fc0055674dff70dbc76efa36d0f2c89b04a24/lombok-1.18.10.jar -Xbootclasspath/a:/Users/gcline5/.gradle/caches/modules-2/files-2.1/org.projectlombok/lombok/1.18.10/625fc0055674dff70dbc76efa36d0f2c89b04a24/lombok-1.18.10.jar",
+    "python.formatting.provider": "yapf",
+    "python.jediPath": "/Users/gcline5/.pyenv/versions/3.6.8/lib/python3.6/site-packages"
+}
