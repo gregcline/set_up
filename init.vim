@@ -35,6 +35,9 @@ Plug 'janko-m/vim-test'
 Plug 'christoomey/vim-tmux-navigator'
 Plug 'christoomey/vim-tmux-runner'
 Plug 'tpope/vim-commentary'
+Plug 'Olical/conjure', {'tag': 'v4.14.1'}
+Plug 'eraserhd/parinfer-rust'
+Plug 'luochen1990/rainbow'
 call plug#end()
 
 "---------------------------------Key bindings---------------------
