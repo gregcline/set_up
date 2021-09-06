@@ -4,10 +4,10 @@
              cmplsp cmp_nvim_lsp}})
 
 ;symbols to show for lsp diagnostics
-(vim.fn.sign_define "LspDiagnosticsSignError" {:text "✗"})
-(vim.fn.sign_define "LspDiagnosticsSignWarning" {:text "!"})
-(vim.fn.sign_define "LspDiagnosticsSignInformation" {:text "I"})
-(vim.fn.sign_define "LspDiagnosticsSignHint" {:text "?"})
+(vim.fn.sign_define "LspDiagnosticsSignError" {:text ""})
+(vim.fn.sign_define "LspDiagnosticsSignWarning" {:text ""})
+(vim.fn.sign_define "LspDiagnosticsSignInformation" {:text ""})
+(vim.fn.sign_define "LspDiagnosticsSignHint" {:text ""})
 
 ;server features
 (let [handlers {"textDocument/publishDiagnostics"
@@ -49,4 +49,5 @@
   ;; Clojure
   (lsp.clojure_lsp.setup {:on_attach on_attach
                           :handlers handlers
-                          :capabilities capabilities}))
+                          :capabilities capabilities
+                          :cmd [(.. (vim.fn.stdpath "data") "/lspinstall/clojure/clojure-lsp")]}))

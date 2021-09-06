@@ -2,3 +2,5 @@
   {autoload {lspinstall lspinstall}})
 
 (lspinstall.setup {})
+
+(lspinstall.installed_servers)

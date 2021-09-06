@@ -1,7 +1,8 @@
 (module config.plugin.spaceline
   {autoload {gl galaxyline
              a aniseed.core
-             nvim aniseed.nvim}})
+             nvim aniseed.nvim
+             condition galaxyline.condition}})
 
 (def- gls gl.section)
 
@@ -18,17 +19,8 @@
    :blue :#0087d7
    :red :#ec5f67})
 
-(defn- buffer-not-empty []
-  (= 1 (nvim.fn.empty (nvim.fn.expand "%:t"))))
-
-(defn- checkwidth []
-  (let [squeeze-width (/ (nvim.fn.winwidth 0) 2)]
-    (> squeeze-width 40)))
-
 (def- left-elements
-  [{:FirstElement
-    {:provider (fn [] "▋")
-     :highlight [colors.blue colors.yellow]}}
+  [
    {:ViMode
     {:provider (fn []
                  (let [alias {:n :NORMAL
@@ -37,54 +29,47 @@
                               :v :VISUAL
                               :V "VISUAL LINE"
                               "" "VISUAL BLOCK"}]
-                   (a.get alias (nvim.fn.mode))))
-     :separator ""
+                   (.. "  " (a.get alias (nvim.fn.mode)) " ")))
      :separator_highlight [colors.purple (fn []
-                                           (if (not (buffer-not-empty))
+                                           (if (not (condition.buffer_not_empty))
                                              colors.purple
                                              colors.darkblue))]
      :highlight [colors.darkblue colors.purple :bold]}}
    {:FileIcon
-    {:provider :FileIcon
-     :condition buffer-not-empty
-     :highlight [(a.get (require :galaxyline.provider_fileinfo) :get_file_icon_color colors.darkblue)]}}
+    {:provider [(fn [] "  ") :FileIcon]
+     :condition condition.buffer_not_empty
+     :highlight [(a.get (require :galaxyline.provider_fileinfo) :get_file_icon_color) colors.darkblue]}}
    {:FileName
-    {:provider [:FileName :FileSize]
-     :condition buffer-not-empty
-     :separator ""
+    {:provider [:FileName]
+     :condition condition.buffer_not_empty
      :separator_highlight [colors.purple colors.darkblue]
      :highlight [colors.magenta colors.darkblue]}}
    {:GitIcon
-    {:provider (fn [] "  ")
-     :condition buffer-not-empty
+    {:provider (fn [] "   ")
+     :condition condition.buffer_not_empty
      :highlight [colors.orange colors.purple]}}
    {:GitBranch
-    {:provider :GitBranch
-     :condition buffer-not-empty
+    {:provider [:GitBranch (fn [] " ")]
+     :condition condition.buffer_not_empty
      :highlight [colors.grey colors.purple]}}
    {:DiffAdd
     {:provider :DiffAdd
-     :condition checkwidth
-     :icon " "
+     :condition condition.checkwidth
+     :icon "  "
      :highlight [colors.green colors.purple]}}
    {:DiffModified
     {:provider :DiffModified
-     :condition checkwidth
+     :condition condition.checkwidth
      :icon " "
      :highlight [colors.orange colors.purple]}}
    {:DiffRemove
     {:provider :DiffRemove
-     :condition checkwidth
+     :condition condition.checkwidth
      :icon " "
      :highlight [colors.red colors.purple]}}
-   {:LeftEnd
-    {:provider (fn [] "")
-     :separator ""
-     :separator_highlight [colors.purple colors.bg]
-     :highlight [colors.purple colors.purple]}}
    {:DiagnosticError
     {:provider :DiagnosticError
-     :icon "  "
+     :icon "   "
      :highlight [colors.red colors.bg]}}
    {:Space {:provider (fn [] " ")}}
    {:DiagnosticWarn
@@ -104,8 +89,7 @@
      :separator_highlight [colors.darkblue colors.purple]
      :highlight [colors.grey colors.purple]}}
    {:PerCent
-    {:provider :LinePercent
-     :separator ""
+    {:provider [(fn [] " ") :LinePercent]
      :separator_highlight [colors.darkblue colors.purple]
      :highlight [colors.grey colors.darkblue]}}
    {:ScrollBar
