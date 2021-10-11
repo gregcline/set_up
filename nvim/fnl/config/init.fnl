@@ -29,7 +29,9 @@
        :list true
        :listchars "tab:»·,trail:·,nbsp:·"
        :termguicolors true
-       :number true}]
+       :number true
+       :colorcolumn "80"
+       :scrolloff 4}]
   (each [option value (pairs options)]
     (core.assoc nvim.o option value)))
 

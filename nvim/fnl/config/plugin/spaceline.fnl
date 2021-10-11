@@ -23,12 +23,24 @@
   [
    {:ViMode
     {:provider (fn []
-                 (let [alias {:n :NORMAL
-                              :i :INSERT
-                              :c :COMMAND
-                              :v :VISUAL
-                              :V "VISUAL LINE"
-                              "" "VISUAL BLOCK"}]
+                 (let [alias {:n   :NORMAL
+                              :no  :NORMAL
+                              :i   :INSERT
+                              :ic  :INSERT
+                              :c   :COMMAND
+                              :ce  :COMMAND
+                              :cv  :COMMAND
+                              :v   :VISUAL
+                              :V   "VISUAL LINE"
+                              "" "VISUAL BLOCK"
+                              :R   :REPLACE
+                              "r?" :REPLACE
+                              :Rv  :REPLACE
+                              :r   :REPLACE
+                              :rm  :REPLACE
+                              :s   :SELECT
+                              :S   :SELECT
+                              :t   :TERMINAL}]
                    (.. "  " (a.get alias (nvim.fn.mode)) " ")))
      :separator_highlight [colors.purple (fn []
                                            (if (not (condition.buffer_not_empty))

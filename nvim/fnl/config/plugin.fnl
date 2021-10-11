@@ -53,7 +53,7 @@
   :phaazon/hop.nvim {:mod :hop}
   ;util
   :tpope/vim-surround {}
-  :b3nj5m1n/kommentary {}
+  :b3nj5m1n/kommentary {:mod :kommentary}
   ; Currently broken?
   ; :TimUntersberger/neogit {:requires [:nvim-lua/plenary.nvim]
   ;                          :mod :neogit})

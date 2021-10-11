@@ -10,3 +10,8 @@
 ;; Tab navigation
 (util.noremap :n :th ":tabprev<CR>")
 (util.noremap :n :tl ":tabnext<CR>")
+(util.noremap :n :tn ":tabnew<CR>")
+
+;; Git hunk navigation
+(util.noremap :n :<leader>hj ":lua require\"gitsigns.actions\".next_hunk()<CR>")
+(util.noremap :n :<leader>hk ":lua require\"gitsigns.actions\".prev_hunk()<CR>")
