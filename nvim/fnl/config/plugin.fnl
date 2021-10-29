@@ -61,4 +61,8 @@
                             :mod :gitsigns}
   :lukas-reineke/indent-blankline.nvim {:mod :indent_blankline}
   :glepnir/galaxyline.nvim {:requires [:kyazdani42/nvim-web-devicons]
-                            :config (require :config.plugin.spaceline)})
+                            :config (require :config.plugin.spaceline)}
+  ; TS
+  :jose-elias-alvarez/nvim-lsp-ts-utils {:requires [:neovim/nvim-lspconfig
+                                                    :nvim-lua/plenary.nvim
+                                                    :jose-elias-alvarez/null-ls.nvim]}) ; Configure as part of LSP

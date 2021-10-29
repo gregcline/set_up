@@ -3,4 +3,4 @@
 
 (treesitter.setup {:highlight {:enable true}
                    :indent {:enable true}
-                   :ensure_installed ["clojure" "fennel" "lua"]})
+                   :ensure_installed ["clojure" "fennel" "lua" "typescript" "tsx"]})

@@ -31,7 +31,10 @@
        :termguicolors true
        :number true
        :colorcolumn "80"
-       :scrolloff 4}]
+       :scrolloff 4
+       :tabstop 2
+       :shiftwidth 2
+       :expandtab true}]
   (each [option value (pairs options)]
     (core.assoc nvim.o option value)))
 
