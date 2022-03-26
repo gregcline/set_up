@@ -1,10 +1,12 @@
 (module config.plugin.lspconfig
   {autoload {nvim aniseed.nvim
              lsp lspconfig
-             cmplsp cmp_nvim_lsp
-             null-ls null-ls
              ts-utils nvim-lsp-ts-utils
-             a aniseed.core}})
+             a aniseed.core
+             configs lspconfig.configs
+             cmplsp cmp_nvim_lsp}})
+
+(def lsp-installer (require "nvim-lsp-installer"))
 
 ;symbols to show for lsp diagnostics
 (vim.fn.sign_define "LspDiagnosticsSignError" {:text ""})
@@ -34,72 +36,67 @@
     (nvim.buf_set_keymap bufnr :n :<leader>lsw ":lua require('telescope.builtin').lsp_workspace_symbols()<cr>" {:noremap true})))
 
 ;server features
-(let [handlers {"textDocument/publishDiagnostics"
-                (vim.lsp.with
-                  vim.lsp.diagnostic.on_publish_diagnostics
-                  {:severity_sort true
-                   :update_in_insert false
-                   :underline true
-                   :virtual_text false})
-                "textDocument/hover"
-                (vim.lsp.with
-                  vim.lsp.handlers.hover
-                  {:border "single"})
-                "textDocument/signatureHelp"
-                (vim.lsp.with
-                  vim.lsp.handlers.signature_help
-                  {:border "single"})}
-      capabilities (cmplsp.update_capabilities (vim.lsp.protocol.make_client_capabilities))
-      on_attach (fn [client bufnr]
-                  (lsp-bindings bufnr)
-                  (nvim.buf_set_keymap bufnr :n :<leader>lf "<cmd>lua vim.lsp.buf.formatting()<CR>" {:noremap true}))]
-
-  ;; Clojure
-  (lsp.clojure_lsp.setup {:on_attach on_attach
-                          :handlers handlers
-                          :capabilities capabilities
-                          :cmd [(.. (vim.fn.stdpath "data") "/lspinstall/clojure/clojure-lsp")]}))
+(def clojure-config {:handlers {"textDocument/publishDiagnostics"
+                                (vim.lsp.with
+                                  vim.lsp.diagnostic.on_publish_diagnostics
+                                  {:severity_sort true
+                                   :update_in_insert false
+                                   :underline true
+                                   :virtual_text false})
+                                "textDocument/hover"
+                                (vim.lsp.with
+                                  vim.lsp.handlers.hover
+                                  {:border "single"})
+                                "textDocument/signatureHelp"
+                                (vim.lsp.with
+                                  vim.lsp.handlers.signature_help
+                                  {:border "single"})}
+                     :capabilities (cmplsp.update_capabilities (vim.lsp.protocol.make_client_capabilities))
+                     :on_attach (fn [client bufnr]
+                                  (lsp-bindings bufnr)
+                                  (nvim.buf_set_keymap bufnr :n :<leader>lf "<cmd>lua vim.lsp.buf.formatting()<CR>" {:noremap true}))})
 
 ; TS
-(null-ls.config {})
-(lsp.null-ls.setup {})
+(def null-ls (require :null-ls))
+(null-ls.setup {:sources [null-ls.builtins.diagnostics.eslint_d]})
 
-(let [on_attach (fn [client bufnr]
-                  (do
-                    ; (set client.resolved_capabilities.document_formatting false)
-                    ; (set client.resolved_capabilities.document_range_formatting false)
+(def ts-config {:on_attach (fn [client bufnr]
+                             (do
+                               ; (set client.resolved_capabilities.document_formatting false)
+                               ; (set client.resolved_capabilities.document_range_formatting false)
 
-                    (ts-utils.setup {:enable_formatting false
-                                     :enable_import_on_completion true
-                                     :eslint_enable_diagnostics true
-                                     :eslint_bin "eslint_d"})
-                    (ts-utils.setup_client client)
+                               (ts-utils.setup {:enable_formatting false
+                                                :enable_import_on_completion true
+                                                :eslint_enable_diagnostics true
+                                                :eslint_bin "eslint_d"})
+                               (ts-utils.setup_client client)
 
-                    (lsp-bindings bufnr)
+                               (lsp-bindings bufnr)
 
-                    (nvim.buf_set_keymap bufnr :n :<leader>lio "<Cmd>TSLspOrganize<CR>" {:noremap true})
-                    (nvim.buf_set_keymap bufnr :n :<leader>lia "<Cmd>TSLspImportAll<CR>" {:noremap true})))
-      capabilities (cmplsp.update_capabilities (vim.lsp.protocol.make_client_capabilities))
-      handlers {"textDocument/publishDiagnostics"
-                (vim.lsp.with
-                  vim.lsp.diagnostic.on_publish_diagnostics
-                  {:severity_sort true
-                   :update_in_insert false
-                   :underline true
-                   :virtual_text false})
-                "textDocument/hover"
-                (vim.lsp.with
-                  vim.lsp.handlers.hover
-                  {:border "single"})
-                "textDocument/signatureHelp"
-                (vim.lsp.with
-                  vim.lsp.handlers.signature_help
-                  {:border "single"})}
-      settings {:typescript {:format {:indentSize 2
-                                      :baseIndentSize 2
-                                      :tabSize 2}}}]
-  (lsp.tsserver.setup {:on_attach on_attach
-                       :capabilities capabilities
-                       :handlers handlers
-                       :settings settings
-                       :cmd [(.. (vim.fn.stdpath "data") "/lspinstall/typescript/node_modules/typescript-language-server/lib/cli.js") "--stdio"]}))
+                               (nvim.buf_set_keymap bufnr :n :<leader>lio "<Cmd>TSLspOrganize<CR>" {:noremap true})
+                               (nvim.buf_set_keymap bufnr :n :<leader>lia "<Cmd>TSLspImportAll<CR>" {:noremap true})))
+                :capabilities (cmplsp.update_capabilities (vim.lsp.protocol.make_client_capabilities))
+                :handlers {"textDocument/publishDiagnostics"
+                           (vim.lsp.with
+                             vim.lsp.diagnostic.on_publish_diagnostics
+                             {:severity_sort true
+                              :update_in_insert false
+                              :underline true
+                              :virtual_text false})
+                           "textDocument/hover"
+                           (vim.lsp.with
+                             vim.lsp.handlers.hover
+                             {:border "single"})
+                           "textDocument/signatureHelp"
+                           (vim.lsp.with
+                             vim.lsp.handlers.signature_help
+                             {:border "single"})}
+                :settings {:typescript {:format {:indentSize 2
+                                                 :baseIndentSize 2
+                                                 :tabSize 2}}}})
+
+(lsp-installer.on_server_ready
+  (fn [server]
+    (let [server-configs {:clojure_lsp clojure-config
+                          :tsserver ts-config}]
+      (server:setup (a.get server-configs server.name)))))
