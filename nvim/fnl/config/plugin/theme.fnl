@@ -2,6 +2,11 @@
   {autoload {theme material.functions
              nvim aniseed.nvim}})
 
-(set nvim.g.colorscheme "material")
+;material
+; (set nvim.g.colorscheme "material")
 
-(theme.change_style "palenight")
+; (theme.change_style "palenight")
+
+;nord
+(set nvim.g.nord_borders true)
+(set nvim.g.nord_contrast true)

@@ -10,6 +10,9 @@
 (set nvim.g.mapleader " ")
 (set nvim.g.maplocalleader ",")
 
+;colorscheme
+(nvim.command "colorscheme nord")
+
 ;don't wrap lines
 (nvim.ex.set :nowrap)
 
@@ -37,6 +40,7 @@
        :expandtab true}]
   (each [option value (pairs options)]
     (core.assoc nvim.o option value)))
+
 
 ;trim trailing whitespace
 (augroup TrimTrailingWhitespace

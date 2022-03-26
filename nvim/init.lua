@@ -27,4 +27,4 @@ vim.g["aniseed#env"] = {
   compile = true
 }
 
-vim.lsp.set_log_level("debug")
+-- vim.lsp.set_log_level("debug")

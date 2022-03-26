@@ -46,7 +46,7 @@
                                 :PaterJason/cmp-conjure]
                      :mod :cmp}
   ;theme
-  :marko-cerovac/material.nvim {:mod :theme}
+  :marko-cerovac/material.nvim {} ;{:mod :theme}
   ;parinfer
   :eraserhd/parinfer-rust {:run "cargo build --release"}
   ;navigation
@@ -65,4 +65,6 @@
   ; TS
   :jose-elias-alvarez/nvim-lsp-ts-utils {:requires [:neovim/nvim-lspconfig
                                                     :nvim-lua/plenary.nvim
-                                                    :jose-elias-alvarez/null-ls.nvim]}) ; Configure as part of LSP
+                                                    :jose-elias-alvarez/null-ls.nvim]} ; Configure as part of LSP
+  :sbdchd/neoformat {:mod :neoformat}
+  :shaunsingh/nord.nvim {:mod :theme})

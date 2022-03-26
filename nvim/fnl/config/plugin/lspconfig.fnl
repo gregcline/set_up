@@ -22,7 +22,6 @@
     (nvim.buf_set_keymap bufnr :n :<leader>ln "<cmd>lua vim.lsp.buf.rename()<CR>" {:noremap true})
     (nvim.buf_set_keymap bufnr :n :<leader>le "<cmd>lua vim.lsp.diagnostic.show_line_diagnostics()<CR>" {:noremap true})
     (nvim.buf_set_keymap bufnr :n :<leader>lq "<cmd>lua vim.lsp.diagnostic.set_loclist()<CR>" {:noremap true})
-    (nvim.buf_set_keymap bufnr :n :<leader>lf "<cmd>lua vim.lsp.buf.formatting()<CR>" {:noremap true})
     (nvim.buf_set_keymap bufnr :n :<leader>lj "<cmd>lua vim.lsp.diagnostic.goto_next()<CR>" {:noremap true})
     (nvim.buf_set_keymap bufnr :n :<leader>lk "<cmd>lua vim.lsp.diagnostic.goto_prev()<CR>" {:noremap true})
     ;telescope
@@ -52,7 +51,8 @@
                   {:border "single"})}
       capabilities (cmplsp.update_capabilities (vim.lsp.protocol.make_client_capabilities))
       on_attach (fn [client bufnr]
-                  (lsp-bindings bufnr))]
+                  (lsp-bindings bufnr)
+                  (nvim.buf_set_keymap bufnr :n :<leader>lf "<cmd>lua vim.lsp.buf.formatting()<CR>" {:noremap true}))]
 
   ;; Clojure
   (lsp.clojure_lsp.setup {:on_attach on_attach
@@ -72,15 +72,13 @@
                     (ts-utils.setup {:enable_formatting false
                                      :enable_import_on_completion true
                                      :eslint_enable_diagnostics true
-
-                                     :debug true})
+                                     :eslint_bin "eslint_d"})
                     (ts-utils.setup_client client)
 
                     (lsp-bindings bufnr)
 
                     (nvim.buf_set_keymap bufnr :n :<leader>lio "<Cmd>TSLspOrganize<CR>" {:noremap true})
-                    (nvim.buf_set_keymap bufnr :n :<leader>lia "<Cmd>TSLspImportAll<CR>" {:noremap true})
-                    (nvim.buf_set_keymap bufnr :n :<leader>lf "<Cmd>lua vim.lsp.buf.formatting_sync()<CR>" {:noremap true})))
+                    (nvim.buf_set_keymap bufnr :n :<leader>lia "<Cmd>TSLspImportAll<CR>" {:noremap true})))
       capabilities (cmplsp.update_capabilities (vim.lsp.protocol.make_client_capabilities))
       handlers {"textDocument/publishDiagnostics"
                 (vim.lsp.with

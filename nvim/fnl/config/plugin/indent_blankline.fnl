@@ -17,6 +17,8 @@
 
 (indent_blankline.setup
   {:space_char_blankline " "
+   :use_treesitter true
+   :enabled false
    ; :char_highlight_list (a.map-indexed
    ;                       (fn [[i _]] (.. "IndentBlankLineIndent" i))
    ;                       indent-colors)
