@@ -39,20 +39,24 @@
                                     :mod :treesitter}
   ;lsp
   :neovim/nvim-lspconfig {:mod :lspconfig}
-  :kabouzeid/nvim-lspinstall {:mod :lsp_install}
+  :williamboman/nvim-lsp-installer {}
+  ; :kabouzeid/nvim-lspinstall {:mod :lsp_install}
   ;autocomplete
   :hrsh7th/nvim-cmp {:requires [:hrsh7th/cmp-buffer
                                 :hrsh7th/cmp-nvim-lsp
                                 :PaterJason/cmp-conjure]
                      :mod :cmp}
+
   ;theme
   :marko-cerovac/material.nvim {:mod :theme}
   ;parinfer
   :eraserhd/parinfer-rust {:run "cargo build --release"}
   ;navigation
-  :phaazon/hop.nvim {:mod :hop}
+  ; :phaazon/hop.nvim {:mod :hop}
+  :ggandor/lightspeed.nvim {}
   ;util
   :tpope/vim-surround {}
+  :tpope/vim-repeat {}
   :b3nj5m1n/kommentary {}
   ; Currently broken?
   ; :TimUntersberger/neogit {:requires [:nvim-lua/plenary.nvim]

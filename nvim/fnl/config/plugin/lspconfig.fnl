@@ -1,7 +1,10 @@
 (module config.plugin.lspconfig
   {autoload {nvim aniseed.nvim
              lsp lspconfig
+             configs lspconfig.configs
              cmplsp cmp_nvim_lsp}})
+
+(def lsp-installer (require "nvim-lsp-installer"))
 
 ;symbols to show for lsp diagnostics
 (vim.fn.sign_define "LspDiagnosticsSignError" {:text ""})
@@ -47,7 +50,12 @@
                     (nvim.buf_set_keymap bufnr :n :<leader>li ":lua require('telescope.builtin').lsp_implementations()<cr>" {:noremap true})))]
 
   ;; Clojure
-  (lsp.clojure_lsp.setup {:on_attach on_attach
-                          :handlers handlers
-                          :capabilities capabilities
-                          :cmd [(.. (vim.fn.stdpath "data") "/lspinstall/clojure/clojure-lsp")]}))
+  ; (lsp.clojure_lsp.setup {:on_attach on_attach
+  ;                         :handlers handlers
+  ;                         :capabilities capabilities
+  ;                         :cmd ["clojure-lsp"]})
+  (lsp-installer.on_server_ready
+    (fn [server]
+      (server:setup {:on_attach on_attach
+                     :handlers handlers
+                     :capabilities capabilities}))))
