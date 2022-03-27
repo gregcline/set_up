@@ -53,7 +53,7 @@
   :eraserhd/parinfer-rust {:run "cargo build --release"}
   ;navigation
   ; :phaazon/hop.nvim {:mod :hop}
-  :ggandor/lightspeed.nvim {}
+  :ggandor/lightspeed.nvim {:mod :lightspeed}
   ;util
   :tpope/vim-surround {}
   :b3nj5m1n/kommentary {:mod :kommentary}
