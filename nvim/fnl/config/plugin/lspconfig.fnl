@@ -7,10 +7,10 @@
 (def lsp-installer (require "nvim-lsp-installer"))
 
 ;symbols to show for lsp diagnostics
-(vim.fn.sign_define "LspDiagnosticsSignError" {:text ""})
-(vim.fn.sign_define "LspDiagnosticsSignWarning" {:text ""})
-(vim.fn.sign_define "LspDiagnosticsSignInformation" {:text ""})
-(vim.fn.sign_define "LspDiagnosticsSignHint" {:text ""})
+(vim.fn.sign_define "DiagnosticsSignError" {:text ""})
+(vim.fn.sign_define "DiagnosticsSignWarning" {:text ""})
+(vim.fn.sign_define "DiagnosticsSignInformation" {:text ""})
+(vim.fn.sign_define "DiagnosticsSignHint" {:text ""})
 
 ;server features
 (let [handlers {"textDocument/publishDiagnostics"
