@@ -57,7 +57,8 @@
   ;util
   :tpope/vim-surround {}
   :tpope/vim-repeat {}
-  :b3nj5m1n/kommentary {}
+  :b3nj5m1n/kommentary {:mod :kommentary}
+  :sindrets/diffview.nvim {}
   ; Currently broken?
   ; :TimUntersberger/neogit {:requires [:nvim-lua/plenary.nvim]
   ;                          :mod :neogit})
