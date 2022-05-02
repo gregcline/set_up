@@ -22,5 +22,7 @@
    ; :char_highlight_list (a.map-indexed
    ;                       (fn [[i _]] (.. "IndentBlankLineIndent" i))
    ;                       indent-colors)
-   :char_highlight_list []})
+   :char_highlight_list []
+   :show_current_context false
+   :enabled false})
 

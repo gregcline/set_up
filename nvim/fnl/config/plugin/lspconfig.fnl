@@ -9,10 +9,10 @@
 (def lsp-installer (require "nvim-lsp-installer"))
 
 ;symbols to show for lsp diagnostics
-(vim.fn.sign_define "DiagnosticsSignError" {:text ""})
-(vim.fn.sign_define "DiagnosticsSignWarning" {:text ""})
-(vim.fn.sign_define "DiagnosticsSignInformation" {:text ""})
-(vim.fn.sign_define "DiagnosticsSignHint" {:text ""})
+; (vim.fn.sign_define "DiagnosticsSignError" {:text ""})
+; (vim.fn.sign_define "DiagnosticsSignWarning" {:text ""})
+; (vim.fn.sign_define "DiagnosticsSignInformation" {:text ""})
+; (vim.fn.sign_define "DiagnosticsSignHint" {:text ""})
 
 (defn lsp-bindings [bufnr]
   (do
@@ -34,6 +34,11 @@
     (nvim.buf_set_keymap bufnr :n :<leader>li ":lua require('telescope.builtin').lsp_implementations()<cr>" {:noremap true})
     (nvim.buf_set_keymap bufnr :n :<leader>lsb ":lua require('telescope.builtin').lsp_document_symbols()<cr>" {:noremap true})
     (nvim.buf_set_keymap bufnr :n :<leader>lsw ":lua require('telescope.builtin').lsp_workspace_symbols()<cr>" {:noremap true})))
+
+(vim.fn.sign_define "DiagnosticSignError" {:text ""})
+(vim.fn.sign_define "DiagnosticSignWarn" {:text ""})
+(vim.fn.sign_define "DiagnosticSignInfo" {:text ""})
+(vim.fn.sign_define "DiagnosticSignHint" {:text ""})
 
 ;server features
 (def clojure-config {:handlers {"textDocument/publishDiagnostics"

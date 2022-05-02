@@ -1,4 +1,6 @@
 (module config.plugin.kommentary
-  {autoload {kommentary kommentary.config}})
+  {autoload {k-config kommentary.config}})
 
-(kommentary.configure_language :clojure {:prefer_single_line_comments true})
+(k-config.configure_language
+  :clojure
+  {:prefer_single_line_comments true})
