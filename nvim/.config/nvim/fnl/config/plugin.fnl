@@ -50,7 +50,7 @@
   ;theme
   :marko-cerovac/material.nvim {:mod :theme}
   ;parinfer
-  :eraserhd/parinfer-rust {:run "cargo build --release"}
+  :eraserhd/parinfer-rust {:run  "cargo build --release"}
   ;navigation
   ; :phaazon/hop.nvim {:mod :hop}
   :ggandor/lightspeed.nvim {:mod :lightspeed}
