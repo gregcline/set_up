@@ -30,6 +30,9 @@
   :Olical/aniseed {:branch :develop}
   ;clojure
   :Olical/conjure {:branch :master :mod :conjure}
+  ;elixir
+  :mhanberg/elixir.nvim {:requires [:nvim-lua/plenary.nvim]
+                         :mod :elixir}
   ;file searching
   :nvim-telescope/telescope.nvim {:requires [:nvim-lua/popup.nvim
                                              :nvim-lua/plenary.nvim]
@@ -38,7 +41,7 @@
   :nvim-treesitter/nvim-treesitter {:run ":TSUpdate"
                                     :mod :treesitter}
   ;lsp
-  :neovim/nvim-lspconfig {:mod :lspconfig}
+  :neovim/nvim-lspconfig {};{:mod :lspconfig}
   :williamboman/nvim-lsp-installer {}
   ; :kabouzeid/nvim-lspinstall {:mod :lsp_install}
   ;autocomplete
@@ -53,7 +56,9 @@
   :eraserhd/parinfer-rust {:run  "cargo build --release"}
   ;navigation
   ; :phaazon/hop.nvim {:mod :hop}
-  :ggandor/lightspeed.nvim {:mod :lightspeed}
+  ; :ggandor/lightspeed.nvim {:mod :lightspeed}
+  :ggandor/leap.nvim {:mod :lightspeed}
+  :ggandor/flit.nvim {:requires [:ggandor/leap.nvim]}
   ;util
   :tpope/vim-surround {}
   :tpope/vim-repeat {}
@@ -66,4 +71,6 @@
                             :mod :gitsigns}
   :lukas-reineke/indent-blankline.nvim {:mod :indent_blankline}
   :glepnir/galaxyline.nvim {:requires [:kyazdani42/nvim-web-devicons]
-                            :config (require :config.plugin.spaceline)})
+                            :config (require :config.plugin.spaceline)}
+  :glepnir/lspsaga.nvim {:requires [:neovim/nvim-lspconfig]
+                         :branch :main})

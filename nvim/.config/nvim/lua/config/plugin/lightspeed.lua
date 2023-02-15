@@ -11,10 +11,13 @@ do
   _2amodule_locals_2a = (_2amodule_2a)["aniseed/locals"]
 end
 local autoload = (require("aniseed.autoload")).autoload
-local lightspeed, util = autoload("lightspeed"), autoload("config.util")
-do end (_2amodule_locals_2a)["lightspeed"] = lightspeed
+local flit, leap, util = autoload("flit"), autoload("leap"), autoload("config.util")
+do end (_2amodule_locals_2a)["flit"] = flit
+_2amodule_locals_2a["leap"] = leap
 _2amodule_locals_2a["util"] = util
-lightspeed.setup({ignore_case = true})
-util.map("n", "s", "<Plug>Lightspeed_omni_s")
-util.map("n", "gs", "<Plug>Lightspeed_omni_gs")
+leap.add_default_mappings()
+vim.api.nvim_set_hl(0, "LeapBackdrop", {link = "Comment"})
+vim.api.nvim_set_hl(0, "LeapMatch", {fg = "white", bold = true, nocombine = true})
+leap.opts.highlight_unlabeled_phase_one_targets = true
+flit.setup()
 return _2amodule_2a
