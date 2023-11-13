@@ -1,4 +1,4 @@
-local _2afile_2a = "/Users/greg/.config/nvim/fnl/config/plugin/indent_blankline.fnl"
+local _2afile_2a = "/Users/eftqd/.config/nvim/fnl/config/plugin/indent_blankline.fnl"
 local _2amodule_name_2a = "config.plugin.indent_blankline"
 local _2amodule_2a
 do

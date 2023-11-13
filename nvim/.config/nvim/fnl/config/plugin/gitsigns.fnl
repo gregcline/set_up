@@ -19,8 +19,7 @@
      (util.noremap :n :<leader>hb ":lua require'gitsigns'.blame_line{preview_hunkfull=true}<CR>")
      (util.noremap :n :<leader>tb ":Gitsigns toggle_current_line_blame<CR>")
      (util.noremap :n :<leader>hd ":Gitsigns diffthis<CR>")
-     (util.noremap :n :<leader>hD ":Gitsigns lua require'gitsigns'.diffthis('~')<CR>")
-     (util.noremap :n :<leader>td ":Gitsigns toggle_deleted<CR>"))})
+     (util.noremap :n :<leader>hD ":Gitsigns lua require'gitsigns'.diffthis('~')<CR>"))})
 
 (gitsigns.setup gs-config)
 

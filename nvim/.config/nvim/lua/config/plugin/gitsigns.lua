@@ -1,4 +1,4 @@
-local _2afile_2a = "/Users/greg/.config/nvim/fnl/config/plugin/gitsigns.fnl"
+local _2afile_2a = "/Users/eftqd/.config/nvim/fnl/config/plugin/gitsigns.fnl"
 local _2amodule_name_2a = "config.plugin.gitsigns"
 local _2amodule_2a
 do
@@ -29,8 +29,7 @@ local function _1_(bufnr)
   util.noremap("n", "<leader>hb", ":lua require'gitsigns'.blame_line{preview_hunkfull=true}<CR>")
   util.noremap("n", "<leader>tb", ":Gitsigns toggle_current_line_blame<CR>")
   util.noremap("n", "<leader>hd", ":Gitsigns diffthis<CR>")
-  util.noremap("n", "<leader>hD", ":Gitsigns lua require'gitsigns'.diffthis('~')<CR>")
-  return util.noremap("n", "<leader>td", ":Gitsigns toggle_deleted<CR>")
+  return util.noremap("n", "<leader>hD", ":Gitsigns lua require'gitsigns'.diffthis('~')<CR>")
 end
 gs_config = {on_attach = _1_}
 _2amodule_2a["gs-config"] = gs_config

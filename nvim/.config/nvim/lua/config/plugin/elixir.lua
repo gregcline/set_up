@@ -1,4 +1,4 @@
-local _2afile_2a = "/Users/greg/.config/nvim/fnl/config/plugin/elixir.fnl"
+local _2afile_2a = "/Users/eftqd/.config/nvim/fnl/config/plugin/elixir.fnl"
 local _2amodule_name_2a = "config.plugin.elixir"
 local _2amodule_2a
 do

@@ -1,10 +1,15 @@
 (module config.plugin.lspconfig
-  {autoload {nvim aniseed.nvim
+  {autoload {a aniseed.core
+             nvim aniseed.nvim
              lsp lspconfig
              configs lspconfig.configs
-             cmplsp cmp_nvim_lsp}})
+             cmplsp cmp_nvim_lsp
+             lspsaga lspsaga
+             mason mason
+             mason-lspconfig mason-lspconfig}})
 
-(def lsp-installer (require "nvim-lsp-installer"))
+(mason.setup {})
+(mason-lspconfig.setup {})
 
 ;symbols to show for lsp diagnostics
 (vim.fn.sign_define "DiagnosticSignError" {:text ""})
@@ -39,9 +44,9 @@
                     (nvim.buf_set_keymap bufnr :n :<leader>ln "<cmd>Lspsaga rename<CR>" {:noremap true})
                     (nvim.buf_set_keymap bufnr :n :<leader>le "<cmd>lua vim.lsp.diagnostic.show_line_diagnostics()<CR>" {:noremap true})
                     (nvim.buf_set_keymap bufnr :n :<leader>lq "<cmd>lua vim.lsp.diagnostic.set_loclist()<CR>" {:noremap true})
-                    (nvim.buf_set_keymap bufnr :n :<leader>lf "<cmd>lua vim.lsp.buf.format({async = true})<CR>" {:noremap true})
+                    ; (nvim.buf_set_keymap bufnr :n :<leader>lf "<cmd>lua vim.lsp.buf.format({async = true})<CR>" {:noremap true})
                     (nvim.buf_set_keymap bufnr :n :<leader>lj "<cmd>Lspsaga diagnostic_jump_next<CR>" {:noremap true})
-                    (nvim.buf_set_keymap bufnr :n :<leader>lk "<cmd>Lspsaga diagnostic_jump_prev" {:noremap true})
+                    (nvim.buf_set_keymap bufnr :n :<leader>lk "<cmd>Lspsaga diagnostic_jump_prev<CR>" {:noremap true})
                     ;telescope
                     (nvim.buf_set_keymap bufnr :n :<leader>la ":Lspsaga code_action<CR>" {:noremap true})
                     (nvim.buf_set_keymap bufnr :v :<leader>la ":Lspsaga range_code_action<CR>" {:noremap true})
@@ -54,6 +59,17 @@
   ;                         :handlers handlers
   ;                         :capabilities capabilities
   ;                         :cmd ["clojure-lsp"]})
-  (lsp-installer.on_server_ready
-    (fn [server]
-      (server:setup (a.get server_map server.name)))))
+  ; (lsp-installer.on_server_ready
+  ;   (fn [server]
+  ;     (server:setup (a.get server_map server.name)))))
+
+  (lspsaga.setup {})
+  (lsp.tsserver.setup {:on_attach on_attach
+                       :handlers handlers
+                       :capabilities capabilities})
+  (lsp.terraformls.setup {:on_attach on_attach
+                          :handlers handlers
+                          :capabilities capabilities})
+  (lsp.yamlls.setup {:on_attach on_attach
+                     :handlers handlers
+                     :capabilities capabilities}))

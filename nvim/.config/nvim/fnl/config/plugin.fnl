@@ -41,14 +41,33 @@
   :nvim-treesitter/nvim-treesitter {:run ":TSUpdate"
                                     :mod :treesitter}
   ;lsp
-  :neovim/nvim-lspconfig {};{:mod :lspconfig}
-  :williamboman/nvim-lsp-installer {}
+  :williamboman/mason.nvim {}
+  :williamboman/mason-lspconfig.nvim {}
+  :mhartington/formatter.nvim {:mod :formatter}
+  :mfussenegger/nvim-lint {:mod :linter}
+  :mfussenegger/nvim-dap {:mod :nvim_dap}
+  :theHamsta/nvim-dap-virtual-text {:requires [:mfussenegger/nvim-dap]}
+  :rcarriga/nvim-dap-ui {:requires [:mfussenegger/nvim-dap]}
+  :mxsdev/nvim-dap-vscode-js {:requires [:mfussenegger/nvim-dap]}
+  :microsoft/vscode-js-debug {:opt true
+                              :tag :v1.75.1
+                              :run "npm install --legacy-peer-deps && npm run compile"}
+  :neovim/nvim-lspconfig {:mod :lspconfig}
+  ; :williamboman/nvim-lsp-installer {}
   ; :kabouzeid/nvim-lspinstall {:mod :lsp_install}
   ;autocomplete
   :hrsh7th/nvim-cmp {:requires [:hrsh7th/cmp-buffer
                                 :hrsh7th/cmp-nvim-lsp
                                 :PaterJason/cmp-conjure]
                      :mod :cmp}
+
+  ; testing
+  :nvim-neotest/neotest {:requires [:nvim-lua/plenary.nvim
+                                    :nvim-treesitter/nvim-treesitter
+                                    :antoinemadec/FixCursorHold.nvim
+                                    :haydenmeade/neotest-jest]
+                         :tag :v2.6.4
+                         :mod :neotest}
 
   ;theme
   :marko-cerovac/material.nvim {:mod :theme}
@@ -69,6 +88,8 @@
   ;                          :mod :neogit})
   :lewis6991/gitsigns.nvim {:requires [:nvim-lua/plenary.nvim]
                             :mod :gitsigns}
+  :tpope/vim-fugitive {}
+  :tpope/vim-rhubarb {}
   :lukas-reineke/indent-blankline.nvim {:mod :indent_blankline}
   :glepnir/galaxyline.nvim {:requires [:kyazdani42/nvim-web-devicons]
                             :config (require :config.plugin.spaceline)}
