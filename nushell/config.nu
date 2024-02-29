@@ -780,5 +780,3 @@ alias gco = git checkout
 alias gl = git pull
 alias gpsup = git push --set-upstream origin (git rev-parse --abbrev-ref HEAD)
 alias gp = git push
-
-source ~/.config/nu/git_completion.nu
