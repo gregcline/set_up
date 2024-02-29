@@ -1,0 +1,8 @@
+[font]
+size = 14.0
+
+[font.normal]
+family = "Inconsolata Nerd Font"
+
+[window]
+option_as_alt = "Both"

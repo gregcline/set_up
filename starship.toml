@@ -1,0 +1,9 @@
+format = """
+$all$custom$cmd_duration$line_break$character\
+"""
+
+[custom.aws_profile]
+command = 'aws iam list-account-aliases | jq ".AccountAliases[0]"'
+format = ' [󰸏  $output]($style) '
+when = 'test $(basename $PWD) = "terraform"'
+ignore_timeout = true
