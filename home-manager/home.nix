@@ -18,13 +18,12 @@
   # The home.packages option allows you to install Nix packages into your
   # environment.
   home.packages = with pkgs; [
+    alacritty
     gcc
     ripgrep
     fd
     bat
     tree
-    _1password
-    _1password-gui
     git
     zellij
     nushell
@@ -32,8 +31,7 @@
     atuin
     zoxide
     neovim
-    janet
-    jpm
+    fnm
     # # Adds the 'hello' command to your environment. It prints a friendly
     # # "Hello, world!" when run.
     # pkgs.hello
@@ -42,7 +40,7 @@
     # # overrides. You can do that directly here, just don't forget the
     # # parentheses. Maybe you want to install Nerd Fonts with a limited number of
     # # fonts?
-    # (pkgs.nerdfonts.override { fonts = [ "FantasqueSansMono" ]; })
+    (pkgs.nerdfonts.override { fonts = [ "Inconsolata" ]; })
 
     # # You can also create simple shell scripts directly inside your
     # # configuration. For example, this adds a command 'my-hello' to your
@@ -53,6 +51,15 @@
   ];
 
   programs = {
+    jujutsu = {
+      enable = true;
+      settings = {
+        user = {
+          name = "Greg Cline";
+          email = "gregcline@fastmail.com";
+        };
+      };
+    };
     helix = {
       enable = true;
       settings = {
@@ -80,10 +87,10 @@
     "zoxide.nu".source = ../../dev/set_up/zoxide/zoxide.nu;
     ".config/nushell/env.nu".source = ../../dev/set_up/nushell/env.nu;
     ".config/nushell/config.nu".source = ../../dev/set_up/nushell/config.nu;
-    ".config/nvim/" = {
-      source = ../../dev/dotfiles/stowed/.config/nvim;
-      recursive = true;
-    };
+    # ".config/nvim/" = {
+    #   source = ../../dev/dotfiles/stowed/.config/nvim;
+    #   recursive = true;
+    # };
     # # Building this configuration will create a copy of 'dotfiles/screenrc' in
     # # the Nix store. Activating the configuration will then make '~/.screenrc' a
     # # symlink to the Nix store copy.
