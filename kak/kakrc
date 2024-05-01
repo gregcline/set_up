@@ -1,0 +1,289 @@
+nop %sh{
+    mkdir -p "$kak_config/autoload"
+    ln -s "$kak_runtime/rc" "$kak_config/autoload/standard-library"
+}
+
+set-option global indentwidth 2
+## Filetype helpers
+hook global BufCreate .*\.(rkt) %{ set buffer filetype scheme }
+
+eval %sh{ kak-tree-sitter -dks --init "$kak_session" --with-highlighting --with-text-objects -vvv }
+colorscheme catppuccin_macchiato
+
+add-highlighter -override global/number-lines number-lines -hlcursor
+add-highlighter -override global/column-limit column 80 default,black+d
+add-highlighter -override global/show-trailing-whitespaces show-whitespaces -only-trailing
+
+# Git
+hook global -group git-main-hook BufCreate .* %{
+  # Update git diff column signs
+  try %{ git show-diff }
+}
+hook global -group git-main-hook BufReload .* %{
+  # Update git diff column signs
+    try %{ git update-diff }
+}
+hook global -group git-main-hook BufWritePost .* %{
+    #  Update git diff column signs
+    try %{ git update-diff }
+}
+
+# Custom highlight
+define-command -override tree-sitter-user-after-highlighter %{
+  add-highlighter -override buffer/git-diff flag-lines Default git_diff_flags
+  add-highlighter -override buffer/ regex (TODO:*) 1:green+b
+  add-highlighter -override buffer/ regex (FIXME:*) 1:red+b
+}
+
+
+# Grep
+set-option global grepcmd 'rg --column --smart-case --sort path'
+
+# Some pickers
+define-command -override -hidden open_buffer_picker %{
+  prompt buffer: -menu -buffer-completion %{
+    buffer %val{text}
+  }
+}
+
+define-command -override -hidden open_file_picker %{
+  prompt file: -menu -shell-script-candidates 'fd --type=file' %{
+    edit -existing %val{text}
+  }
+}
+
+define-command -override file-picker %{
+  try %{
+      edit -scratch '*file-picker*'
+
+      map buffer normal <ret> 'x_gf'
+      add-highlighter buffer/file-picker-item regex (.*) 1:cyan
+      set-option buffer swiper_callback 'x_gf'
+
+      execute-keys '|fd --type=file<ret>gg'
+  }
+}
+
+define-command -override -hidden open_rg_picker %{
+  prompt search: %{
+      prompt refine: -menu -shell-script-candidates "rg -in --column '%val{text}'" %{
+            evaluate-commands "edit -existing %sh{
+                # ""$kak_text"" | IFS=':' read file line column rest
+                build-file-from-rg ""$kak_text""
+            }"
+      }
+  }
+}
+
+# match mode
+define-command -hidden match-delete-surround -docstring 'delete surrounding key' %{
+  on-key %{
+    match-delete-surround-key %val{key}
+  }
+}
+
+define-command -hidden match-delete-surround-key -params 1 %{
+  execute-keys -draft "<a-a>%arg{1}i<del><esc>a<backspace><esc>"
+}
+
+define-command -override add-surrounding-pair -params 2 -docstring 'add surrounding pairs left and right to selection' %{
+  evaluate-commands -no-hooks -save-regs '"' %{
+    set-register '"' %arg{1}
+    execute-keys -draft P
+    set-register '"' %arg{2}
+    execute-keys -draft p
+  }
+}
+
+define-command surround-replace -docstring 'prompt for a surrounding pair and replace it with another' %{
+  on-key %{
+    surround-replace-sub %val{key}
+  }
+}
+
+define-command -hidden surround-replace-sub -params 1 %{
+	on-key %{
+    evaluate-commands -no-hooks -draft %{
+      execute-keys "<a-a>%arg{1}"
+
+      # select the surrounding pair and add the new one around it
+      enter-user-mode surround-add
+      execute-keys %val{key}
+    }
+
+    # delete the old one
+    match-delete-surround-key %arg{1}
+	}
+}
+
+# hop.kak
+evaluate-commands %sh{ hop-kak --init }
+
+declare-option str hop_kak_keyset 'asdghklqwertyuiopzxcvbnmfj'
+
+define-command hop-kak %{
+  eval -no-hooks -- %sh{ hop-kak --keyset "$kak_opt_hop_kak_keyset" --sels "$kak_selections_desc" }
+}
+
+define-command hop-kak-words %{
+  evaluate-commands -draft %{
+    execute-keys 'gtGbxs\w+<ret>'
+    evaluate-commands -no-hooks -client "%val{client}" -- %sh{ hop-kak --keyset "$kak_opt_hop_kak_keyset" --sels "$kak_selections_desc" }
+  }
+}
+
+map global goto W <esc>:hop-kak<ret> -docstring ':hop-kak'
+map global goto w <esc>:hop-kak-words<ret> -docstring ':hop-kak-words'
+
+# yank mode
+define-command -override extra-yank-buffile -docstring 'yank the path of the current buffer' %{
+  set-register p %val{buffile}
+}
+
+declare-option str extra_yank_system_clipboard_cmd %sh{
+  test "$(uname)" = "Darwin" && echo 'pbcopy' || echo 'xsel -i -b <ret>'
+}
+
+declare-option str extra_paste_system_clipboard_cmd %sh{
+  test "$(uname)" = "Darwin" && echo 'pbpaste' || echo 'xsel -o -b <ret>'
+}
+
+define-command -override extra-yank-system -docstring 'yank into the system clipboard' %{
+  execute-keys -draft "!%opt{extra_yank_system_clipboard_cmd}<ret>"
+}
+
+define-command -override extra-paste-system -docstring 'paste from the system clipboard' %{
+  execute-keys -draft "!%opt{extra_paste_system_clipboard_cmd}<ret>"
+}
+
+define-command -override extra-replace-system -docstring 'replace from the system clipboard' %{
+  execute-keys -draft "d!%opt{extra_paste_system_clipboard_cmd}<ret>"
+}
+
+# Modeline
+declare-option str bufname_abbrev
+
+define-command -hidden update-bufname-abbrev %{
+  set-option window bufname_abbrev %sh{
+    if (( ${#kak_bufname} > $((kak_window_width / 3)) )); then
+      sed "s:\([^/]\)[^/]*/:\1/:g" <<< $kak_bufname
+    else
+      echo $kak_bufname
+    fi
+  }
+}
+
+set-option global modelinefmt '{DiagnosticError} %opt{lsp_diagnostic_error_count} {DiagnosticWarning} %opt{lsp_diagnostic_warning_count} {DiagnosticInfo} %opt{lsp_diagnostic_info_count} {DiagnosticHint} %opt{lsp_diagnostic_hint_count} {StatusLine}%opt{bufname_abbrev} {green}%val{cursor_line}:%val{cursor_char_column} {blue}(%val{buf_line_count}L){{context_info}} {{mode_info}}'
+
+# LSP
+
+eval %sh{ kak-lsp --kakoune -s $kak_session }
+lsp-enable
+
+## common options
+lsp-auto-signature-help-enable
+lsp-inlay-hints-enable global
+lsp-inlay-diagnostics-enable global
+lsp-inlay-code-lenses-enable global
+lsp-inline-diagnostics-disable global
+lsp-diagnostic-lines-disable global
+set-option global lsp_hover_anchor true
+set-option global lsp_auto_show_code_actions true
+#
+
+# jujutsu
+declare-user-mode jujutsu
+map global jujutsu l ':jj-log<ret>' -docstring 'open jj log in scratch'
+map global jujutsu s ':jj-show<ret>' -docstring 'open jj show in scratch'
+
+declare-user-mode match
+map global match a '<a-a>'                               -docstring 'match around'
+map global match d ':match-delete-surround<ret>'         -docstring 'delete surround'
+map global match i '<a-i>'                               -docstring 'match inside'
+map global match m m                                     -docstring 'select other matching delimiter'
+map global match s ':enter-user-mode surround-add<ret>'  -docstring 'add surrounding pairs'
+map global match r ':surround-replace<ret>'              -docstring 'replace surrounding pairs'
+
+declare-user-mode match-extend
+map global match-extend a '<A-a>'                        -docstring 'extend around'
+map global match-extend i '<A-i>'                        -docstring 'extend inside'
+map global match-extend m M                              -docstring 'extend other matching delimiter'
+
+# surround-add mode; support most of the useful delimiters
+declare-user-mode surround-add
+map global surround-add "'" ":add-surrounding-pair ""'"" ""'""<ret>" -docstring 'surround selections with quotes'
+map global surround-add ' ' ':add-surrounding-pair " " " "<ret>'     -docstring 'surround selections with pipes'
+map global surround-add '"' ':add-surrounding-pair ''"'' ''"''<ret>' -docstring 'surround selections with double quotes'
+map global surround-add '(' ':add-surrounding-pair ( )<ret>'         -docstring 'surround selections with curved brackets'
+map global surround-add ')' ':add-surrounding-pair ( )<ret>'         -docstring 'surround selections with curved brackets'
+map global surround-add '*' ':add-surrounding-pair * *<ret>'         -docstring 'surround selections with stars'
+map global surround-add '<' ':add-surrounding-pair <lt> <gt><ret>'   -docstring 'surround selections with chevrons'
+map global surround-add '>' ':add-surrounding-pair <lt> <gt><ret>'   -docstring 'surround selections with chevrons'
+map global surround-add '[' ':add-surrounding-pair [ ]<ret>'         -docstring 'surround selections with square brackets'
+map global surround-add ']' ':add-surrounding-pair [ ]<ret>'         -docstring 'surround selections with square brackets'
+map global surround-add '_' ':add-surrounding-pair "_" "_"<ret>'     -docstring 'surround selections with underscores'
+map global surround-add '{' ':add-surrounding-pair { }<ret>'         -docstring 'surround selections with angle brackets'
+map global surround-add '|' ':add-surrounding-pair | |<ret>'         -docstring 'surround selections with pipes'
+map global surround-add '}' ':add-surrounding-pair { }<ret>'         -docstring 'surround selections with angle brackets'
+map global surround-add '«' ':add-surrounding-pair « »<ret>'         -docstring 'surround selections with French chevrons'
+map global surround-add '»' ':add-surrounding-pair « »<ret>'         -docstring 'surround selections with French chevrons'
+map global surround-add '“' ':add-surrounding-pair “ ”<ret>'         -docstring 'surround selections with French chevrons'
+map global surround-add '”' ':add-surrounding-pair “ ”<ret>'         -docstring 'surround selections with French chevrons'
+map global surround-add ` ':add-surrounding-pair ` `<ret>'           -docstring 'surround selections with ticks'
+map global surround-add t ':surround-tag<ret>'                       -docstring 'surround selections with a <tag>'
+
+# Mappings
+map global user p ':extra-paste-system<ret>' -docstring 'paste selections from system clipboard'
+map global user y ':extra-yank-system<ret>'  -docstring 'yank to system clipboard'
+map global user r ':extra-replace-system<ret>' -docstring 'replace from system clipboard'
+
+## pickers
+map global user / ':grep '                   -docstring 'grep'
+map global user b ':open_buffer_picker<ret>' -docstring 'pick buffer'
+map global user f ':open_file_picker<ret>'   -docstring 'pick file'
+map global user F ':open_rg_picker<ret>'     -docstring 'search project'
+
+## LSP
+declare-user-mode user-lsp
+map global user l ':enter-user-mode user-lsp<ret>'      -docstring 'lsp mode'
+map global user-lsp a ':lsp-code-actions<ret>'          -docstring 'code action'
+map global user-lsp c ':lsp-code-lens<ret>'             -docstring 'execute code lens'
+map global user-lsp d ':lsp-diagnostics<ret>'           -docstring 'list diagnostics'
+map global user-lsp h ':lsp-highlight-references<ret>'  -docstring 'highlight references'
+map global user-lsp I ':lsp-implementation<ret>'        -docstring 'list implementations'
+map global user-lsp i ':lsp-incoming-calls<ret>'        -docstring 'incoming calls'
+map global user-lsp K ':lsp-hover-buffer<ret>'          -docstring 'hover in a dedicated buffer'
+map global user-lsp k ':lsp-hover<ret>'                 -docstring 'hover'
+map global user-lsp l ':lsp-code-lens<ret>'             -docstring 'run a code lens'
+map global user-lsp ) ':lsp-next-function<ret>'         -docstring 'jump to the next function'
+map global user-lsp ( ':lsp-previous-function<ret>'     -docstring 'jump to the previous function'
+map global user-lsp o ':lsp-outgoing-calls<ret>'        -docstring 'outgoing calls'
+map global user-lsp p ':lsp-workspace-symbol-incr<ret>' -docstring 'pick workspace symbol'
+map global user-lsp P ':lsp-workspace-symbol<ret>'      -docstring 'list workspace symbols'
+map global user-lsp r ':lsp-references<ret>'            -docstring 'list references'
+map global user-lsp R ':lsp-rename-prompt<ret>'         -docstring 'rename'
+map global user-lsp S ':lsp-document-symbol<ret>'       -docstring 'list workspace symbols'
+map global user-lsp s ':lsp-goto-document-symbol<ret>'  -docstring 'pick document symbol'
+map global user-lsp x ':lsp-find-error<ret>'            -docstring 'jump to the prev/next error'
+map global user n ':enter-user-mode notes<ret>'         -docstring 'notes'
+
+## match
+map global normal M ':enter-user-mode match-extend<ret>' -docstring 'match mode (extend)'
+map global normal m ':enter-user-mode match<ret>'        -docstring 'match mode'
+
+## jujutsu
+map global user j ':enter-user-mode jujutsu<ret>' -docstring jujutsu
+
+# comment
+map global user c ':comment-line<ret>' -docstring 'comment line'
+
+## completions
+hook global InsertCompletionShow .* %{
+  map global insert <tab> <c-n>
+  map global insert <s-tab> <c-p>
+}
+hook global InsertCompletionHide .* %{
+  unmap global insert <tab>
+  unmap global insert <s-tab>
+}
+

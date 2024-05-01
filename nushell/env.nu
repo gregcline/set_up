@@ -79,8 +79,20 @@ $env.NU_PLUGIN_DIRS = [
 ]
 
 # To add entries to PATH (on Windows you might use Path), you can use the following pattern:
-$env.PATH = ($env.PATH | split row (char esep) | prepend '~/.bun/bin' | prepend '~/.local/bin')
-#
+$env.PATH = (
+
+    $env.PATH | split row (char esep)
+    | prepend '~/.bun/bin'
+    | prepend '~/.local/bin'
+    | prepend '/opt/gerbil/bin'
+    | prepend '/usr/local/go/bin'
+    | prepend '~/go/bin'
+    | prepend '~/.cargo/bin'
+    | prepend '~/dev/gerbil/glox/.gerbil/bin/'
+    | prepend '~/dev/kakoune/src'
+    | prepend '~/dev/racket/scripts/bin/'
+)
+
 mkdir ~/.cache/starship
 starship init nu | save -f ~/.cache/starship/init.nu
 zoxide init nushell | save -f ~/.zoxide.nu
